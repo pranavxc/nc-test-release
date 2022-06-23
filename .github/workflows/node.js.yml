@@ -1,0 +1,24 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          openssl rand -base64 12 > out.js
+        
+      - name: Upload mac executables to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.NC_GITHUB_TOKEN }}
+          file: out.js
+          tag: 1.0
+          overwrite: true
+          file_glob: true
