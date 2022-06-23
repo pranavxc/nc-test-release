@@ -11,14 +11,29 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.3
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - run: |
-          openssl rand -base64 12 > out.js
+          openssl rand -base64 12 > out1.js
         
-      - name: Upload mac executables to release
-        uses: svenstaro/upload-release-action@v2
+#       - name: Upload mac executables to release
+#         uses: svenstaro/upload-release-action@v2
+#         with:
+#           repo_token: ${{ secrets.NC_GITHUB_TOKEN }}
+#           file: out.js
+#           tag: 1.0
+#           overwrite: true
+#           file_glob: true
+      - name: Upload release binary
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          repo_token: ${{ secrets.NC_GITHUB_TOKEN }}
-          file: out.js
-          tag: 1.0
-          overwrite: true
-          file_glob: true
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./out1.js
+          asset_name: my-widget
+          asset_content_type: application/octet-stream
+
